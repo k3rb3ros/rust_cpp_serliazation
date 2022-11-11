@@ -19,10 +19,10 @@ set (rust_lib tiny_aircraft_state)
 add_library(${rust_lib} IMPORTED STATIC)
 set_target_properties (
     ${rust_lib} PROPERTIES
-    IMPORTED_LOCATION "/home/k3rb3ros/development/rust_cpp_interop_experiment/rust_interop/target/debug/libtiny_aircraft_state.a"
+    IMPORTED_LOCATION "/home/rmorris/development/rust_cpp_serliazation/rust_interop/target/debug/libtiny_aircraft_state.a"
     INTERFACE_INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/../rust_interop/src")
 
 add_executable (${target} ${proj_src})
 target_compile_features (${target} PRIVATE cxx_std_17)
 target_include_directories (${target} PRIVATE ${PROJECT_SOURCE_DIR}/../rust_interop/src)
-target_link_libraries (${target} PRIVATE ${rust_lib})
+target_link_libraries (${target} PRIVATE ${rust_lib} dl pthread)

@@ -2,9 +2,8 @@
 #include <cstdint>
 #include <cstring>
 #include <iostream>
-#include <string>
 
-#include "tiny_aircraft_state.h"
+#include "tiny_aircraft_state_data.h"
 
 using std::cout;
 using std::cerr;
@@ -32,7 +31,7 @@ int main (void)
         cerr << "unable to serialize TinyAircraftState" << endl;
     }
 
-    TinyAircraftState ds_as = deserialize(buff.data(), strlen(buff.data()));
+    TinyAircraftState ds_as = deserialize(buff.data());
     cout << "Deserialized struct" << endl;
     cout << "Pitch: " << ds_as.pitch << endl;
     cout << "Roll:" << ds_as.roll << endl;

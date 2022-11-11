@@ -1,5 +1,6 @@
 use serde::{Serialize, Deserialize};
-use std::ffi::{c_char, c_int, CStr};
+use std::ffi::{CStr};
+use std::os::raw::{c_char, c_int};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[repr(C)]
@@ -46,7 +47,7 @@ pub extern fn serialize(state: &TinyAircraftState, ser_buff:*mut c_char, max_len
             }
             // null terminate C-String
             i += 1;
-            let mut null_term_byte = ser_buff.offset(i);
+            let null_term_byte = ser_buff.offset(i);
             *null_term_byte = 0;
 
             return true;

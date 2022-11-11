@@ -18,6 +18,6 @@ TinyAircraftState create_default_struct();
 
 bool serialize(const TinyAircraftState *state, char *ser_buff, int max_len);
 
-TinyAircraftState deserialize(char *ser_buff, int ser_len);
+TinyAircraftState deserialize(char *ser_buff);
 
 } // extern "C"
