@@ -13,7 +13,7 @@ using std::endl;
 int main (void)
 {
     TinyAircraftState as = create_default_struct();
-    std::array<char, 1024> buff{};
+    std::array<uint8_t, 1024> buff{};
 
     as.pitch = 1.23f;
     as.roll = 2.34f;
@@ -23,7 +23,7 @@ int main (void)
 
     if (serialize(&as, &buff[0], buff.size()))
     {
-        std::string test{buff.data()};
+        std::string test{reinterpret_cast<const char*>(buff.data())};
         cout << "serialized struct: " << test << endl;
     }
     else

@@ -1,6 +1,5 @@
 use serde::{Serialize, Deserialize};
 use std::ffi::{CStr};
-use std::os::raw::{c_char, c_int};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[repr(C)]
@@ -30,7 +29,7 @@ pub extern fn create_default_struct() -> TinyAircraftState {
 }
 
 #[no_mangle]
-pub extern fn serialize(state: &TinyAircraftState, ser_buff:*mut c_char, max_len:c_int) -> bool {
+pub extern fn serialize(state: &TinyAircraftState, ser_buff:*mut u8, max_len:u32) -> bool {
     let binding = serde_json::to_string(&state).unwrap();
     let json_str = binding.as_bytes();
     let c_str_len= json_str.len();
@@ -38,11 +37,11 @@ pub extern fn serialize(state: &TinyAircraftState, ser_buff:*mut c_char, max_len
 
     if buffer_big_enough {
         unsafe {
-            let mut i: isize = 0; 
+            // copy the results of to_string to passed in c buffer
+            let mut i: isize = 0;
             for byte in json_str {
-                let src_byte = *byte as c_char;
                 let dest_byte = ser_buff.offset(i);
-                *dest_byte = src_byte;
+                *dest_byte = *byte;
                 i += 1;
             }
             // null terminate C-String
@@ -58,8 +57,8 @@ pub extern fn serialize(state: &TinyAircraftState, ser_buff:*mut c_char, max_len
 }
 
 #[no_mangle]
-pub extern fn deserialize(ser_buff:*mut c_char) -> TinyAircraftState {  
-    let serialized_c_str = unsafe { CStr::from_ptr(ser_buff) };
+pub extern fn deserialize(ser_buff:*const u8) -> TinyAircraftState {
+    let serialized_c_str = unsafe { CStr::from_ptr(ser_buff as *const i8) };
     let serialized_rust_str = String::from_utf8_lossy(serialized_c_str.to_bytes()).to_string();
     let deserialized_struct: TinyAircraftState = serde_json::from_str(&serialized_rust_str).unwrap();
 
